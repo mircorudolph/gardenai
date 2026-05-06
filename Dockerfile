@@ -1,10 +1,14 @@
 FROM python:3.12.2
 
+COPY --from=ghcr.io/astral-sh/uv:0.11.9 /uv /uvx /bin/
+
 COPY . /app/
 
 WORKDIR /app
 
-RUN python -m pip install -r requirements.txt
+ENV PATH="/app/.venv/bin:$PATH"
+
+RUN uv sync --frozen --no-dev
 
 EXPOSE 8501
 

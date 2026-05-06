@@ -5,16 +5,14 @@
 1. Clone the repository 
 `git clone https://github.com/mircorudolph/gardenai.git`
 
-2. Create a virtual environment for installing packages outside the root folder of the cloned repository
-`python -m venv .gardenai_venv`
-`cd .gardenai_venv/Scripts`
-`activate.bat` (for command prompt. choose script depending on console being used)
+2. Install uv if it is not already available
+`curl -LsSf https://astral.sh/uv/install.sh | sh`
 
-3. Navigate to the folder gardenai and install the packages of requirements.txt
-`python -m pip install -r requirements.txt`
+3. Navigate to the folder gardenai and install the packages from `pyproject.toml` and `uv.lock`
+`uv sync --frozen`
 
 4. Start streamlit from the parent folder gardenai
-`python -m streamlit run client.py`
+`uv run streamlit run client.py`
 
 5. The browser should open with the running application.
 If not open the browser under http://localhost:8501/ or which ever is the output in the terminal.
