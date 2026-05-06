@@ -1,105 +1,101 @@
 # gardenai
 
-## Installation instructions using git:
+`gardenai` is a Streamlit chat app that recommends native plants for gardens in
+Michigan and Alabama. It uses OpenAI chat completions with a local CSV dataset
+from the Native Plant Information Network.
 
-1. Clone the repository 
-`git clone https://github.com/mircorudolph/gardenai.git`
+## Documentation
 
-2. Install uv if it is not already available
-`curl -LsSf https://astral.sh/uv/install.sh | sh`
+- [Documentation index](docs/README.md)
+- [Architecture](docs/architecture.md)
 
-3. Navigate to the folder gardenai and install the packages from `pyproject.toml` and `uv.lock`
-`uv sync --frozen`
+## Requirements
 
-4. Start streamlit from the parent folder gardenai
-`uv run streamlit run client.py`
+- Windows with Command Prompt
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- Docker Desktop, if you want to run the container
+- An OpenAI API key in `GARDENAI_API_KEY`
 
-5. The browser should open with the running application.
-If not open the browser under http://localhost:8501/ or which ever is the output in the terminal.
+## Windows CMD setup with uv
 
-### API Key
-The API key has to be provided as an environment variable with name
-`GARDENAI_API_KEY`.
-The app uses gpt-3.5-turbo.
-API keys can be created here: https://platform.openai.com/api-keys
+Install uv from CMD by running the official Windows installer through
+PowerShell:
 
-## Installation instructions using Docker
-1. Open CLI and pull the docker image from dockerhub `docker pull mircorudolph/gardenai-app`
-2. Run the docker image `docker run -p 8501:8501 -e "GARDENAI_API_KEY=value" mircorudolph/gardenai-app`.`value` in `GARDENAI_API_KEY=value` must be replaced with a valid openai API key.
-3. Open the app in a browser under adress `localhost:8501`
+```cmd
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
 
-## Example of usage:
+Restart CMD so the `uv` command is available, then clone and run the app:
 
-**General**
+```cmd
+git clone https://github.com/mircorudolph/gardenai.git
+cd gardenai
+uv sync --frozen
+set GARDENAI_API_KEY=your_openai_api_key
+uv run streamlit run client.py
+```
 
-Providing text into the chat input field, will send the prompt to the chat agent. The response will be displayed in the text box with different icons for user or assistant.
-The reset button will clear all `session_state` and reinitialize the default values. 
-If an error message is provided, this typically means that no API key is provided or another error regarding the openai API occured. In this case, the terminal output of the app has to be checked.
+Open the Streamlit URL printed in the terminal. By default it is:
 
-**Example 1**
+```text
+http://localhost:8501
+```
 
-Prompt:
-'I live in Alabama and my garden is sunny, dry and shaded. I prefer trees.'
+## Docker setup
 
-Response:
-'Based on your garden information and preference for trees, here is a list of possible native plants for your garden in Alabama:
+Run the published image:
 
-1. Common Serviceberry, Downy Serviceberry, Shadbush, Juneberry, Junebush, Shadblow, Sarvis
-2. Pignut Hickory, Sweet Pignut Hickory, Coast Pignut Hickory, Pignut, Sweet Pignut, Smoothbark Hickory, Broom Hickory, Red Hickory, Swamp Hickory, Switch Hickory, Switchbud Hickory
-3. Green Ash, Red Ash, Swamp Ash, River Ash, Water Ash, Darlington Ash
-4. American Holly, White Holly, Prickly Holly, Evergreen Holly, Christmas Holly, Yule Holly
-5. Yaupon, Yaupon Holly, Cassina
-6. Eastern Red Cedar, Eastern Redcedar, Virginia Juniper, Red Juniper, Pencil Cedar, Carolina Cedar, Red Savin
-7. Eastern Hop-hornbeam, American Hop-hornbeam, Woolly Hop-hornbeam, Eastern Ironwood, Roughbark Ironwood, Ironwood, Deerwood, Leverwood
-8. Longleaf Pine, Georgia Pine, Longleaf Yellow Pine, Southern Yellow Pine, Longstraw Pine, Hill Pine, Hard Pine, Heart Pine
-9. Chickasaw Plum, Sandhill Plum
-10. Mexican Plum, Bigtree Plum, Inch Plum
-11. Black Cherry, Wild Black Cherry, Rum Cherry
-12. White Oak, Northern White Oak, Eastern White Oak, Stave Oak, Ridge White Oak, Forked-leaf White Oak
-13. Shumard Oak, Shumard's Oak, Shumard Red Oak, Southern Red Oak, Swamp Red Oak, Spotted Oak
-14. Black Locust
-15. American Basswood, American Linden, Lime Tree, Bee Tree
+```cmd
+docker pull mircorudolph/gardenai-app
+docker run --rm -p 8501:8501 -e GARDENAI_API_KEY=your_openai_api_key mircorudolph/gardenai-app
+```
 
-These native trees are suitable for a sunny, dry, and shaded garden in Alabama. Let me know if you need more information about any specific plant.'
+Or build and run the image from this repository:
 
-Prompt:
-'I am looking for a herb for my same garden instead of a tree'
+```cmd
+docker build -t gardenai .
+docker run --rm -p 8501:8501 -e GARDENAI_API_KEY=your_openai_api_key gardenai
+```
 
-Response:
-'Based on your preference for a herb in a sunny and dry garden in Alabama, here are some native plant options:
+Then open:
 
-1. Common Yarrow, Western Yarrow, Yarrow, Milfoil
-2. Butterflyweed, Butterfly Weed, Butterfly Milkweed, Orange Milkweed, Pleurisy Root, Chigger Flower, Chiggerweed
-3. Eastern Purple Coneflower, Purple Coneflower
-4. Indian Blanket, Firewheel, Girasol Rojo
-5. Standing Cypress, Texas Plume, Red Texas Star, Red Gilia
-6. Lemon Beebalm, Purple Horsemint, Lemon Mint, Plains Horsemint, Lemon Horsemint, Horsemint, Purple Lemon Mint
-7. Pink Evening Primrose, Showy Evening Primrose, Mexican Evening Primrose, Showy Primrose, Pink Ladies, Buttercups, Pink Buttercups
-8. Mississippi Penstemon, Mississippi Beardtongue, Smooth White Penstemon, Smooth White Beardtongue, Talus Slope Penstemon, Talus Slope Beardtongue, Foxglove Penstemon, Foxglove 9. Beardtongue
-9. Black-eyed Susan, Common Black-eyed Susan, Brown-eyed Susan, Blackeyed Susan
+```text
+http://localhost:8501
+```
 
-These native herbs are suitable for a sunny and dry garden in Alabama. Let me know if you need more information about any specific plant from the list.'
+## Usage examples
 
-Prompt:
-'The duration of the herb should be annual'
+Try a conversation like:
 
-Response:
-'Based on your preference for an annual herb in a sunny and dry garden in Alabama, here are some native plant options:
+```text
+I live in Alabama and my garden is sunny, dry, and shaded. I prefer trees.
+```
 
-1. Indian Blanket, Firewheel, Girasol Rojo
-2. Lemon Beebalm, Purple Horsemint, Lemon Mint, Plains Horsemint, Lemon Horsemint, Horsemint, Purple Lemon Mint
-3. Black-eyed Susan, Common Black-eyed Susan, Brown-eyed Susan, Blackeyed Susan
+Then refine the request:
 
-These native annual herbs are suitable for your garden conditions in Alabama. Let me know if you need more information about any specific plant from the list.'
+```text
+I am looking for a herb for my same garden instead of a tree.
+```
 
-**The AI agent correctly filters the list based on updated user input and finally selects a subset for herbs**
+The assistant keeps the conversation history and filters the plant dataset again
+with the updated preference.
 
-**Example 2**
+If you ask for an unsupported state:
 
-Prompt:
-'I live in Pittsburgh'
+```text
+I live in Pittsburgh.
+```
 
-Response:
-'I'm sorry, but the information about plants is only available for the states of Michigan or Alabama. If you have a garden in Michigan or Alabama, please let me know the details about your garden.'
+The assistant should explain that plant data is only available for Michigan and
+Alabama.
 
-**The AI agent correctly hints, that the data is not available.**
+## Configuration
+
+`GARDENAI_API_KEY` is read from the environment. For a persistent local setup,
+you can also create a `.env` file in the repository root:
+
+```text
+GARDENAI_API_KEY=your_openai_api_key
+```
+
+The app currently calls the `gpt-3.5-turbo` model in `api_call.py`.
